@@ -259,8 +259,10 @@ class TestAzureEmbedding:
         self, mock_settings_azure: Any, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """Test that Azure falls back to OPENAI_API_KEY if Azure key not set."""
+        monkeypatch.delenv("AZURE_OPENAI_API_KEY", raising=False)
         monkeypatch.setenv("OPENAI_API_KEY", "openai-key")
         monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://test.openai.azure.com/")
+        mock_settings_azure.embedding.api_key = None
         
         embedding = AzureEmbedding(mock_settings_azure)
         assert embedding.api_key == "openai-key"
@@ -278,6 +280,8 @@ class TestAzureEmbedding:
     ) -> None:
         """Test that initialization fails when endpoint is missing."""
         monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
+        # Must clear the env fallback too: a CI runner may define it.
+        monkeypatch.delenv("AZURE_OPENAI_ENDPOINT", raising=False)
         mock_settings_azure.embedding.azure_endpoint = None
         
         with pytest.raises(ValueError, match="Azure OpenAI endpoint not provided"):

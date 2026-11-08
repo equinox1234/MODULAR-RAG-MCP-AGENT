@@ -442,6 +442,12 @@
   - `mypy` 没有进门禁（仍有较多存量错误）。
   - 跑 CI 需要能装 `chromadb`/`ragas`/`streamlit` 等重依赖，冷启动约 5–10 分钟。
   - `data/` 被 gitignore，语料相关测试靠 skip；CI 覆盖不到 PDF 摄取全链路。
+- **首次真实 CI 运行失败（2026-11-08）**：推送后 `Unit tests` 步骤红，`Install project` 与 `Lint` 绿。
+  - **复现方式**：本地克隆一份干净仓库（`data/`、`.env` 都不存在）再跑，得到与 CI 等价的 1427 passed / 30 skipped —— 说明本地没有问题。加上环境变量（占位或真实 key）后立刻出现 **4 个失败**：
+    `AzureLLM.test_init_missing_api_key`、`AzureLLM.test_init_missing_endpoint`、`AzureEmbedding.test_initialization_missing_endpoint`、`AzureEmbedding.test_initialization_fallback_to_openai_env_var`。
+  - **根因**：这些用例断言的是「**缺少**凭据时报错」，却依赖"运行环境本身没有 key"这个前提。`patch.dict(os.environ, {...})` 默认不清空，`monkeypatch.delenv` 只删了部分变量——环境里只要有 `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY` 就会破坏前提。
+  - **修复**：`patch.dict(..., clear=True)`；对每个相关变量显式 `delenv`；fallback 用例显式清掉 settings 里的 `api_key`。
+  - **教训**：这类"断言缺失状态"的测试必须自己构造空环境，不能依赖 runner 干净。以后新增同类用例一律 `clear=True`。
 
 ### T-8 trace 治理
 

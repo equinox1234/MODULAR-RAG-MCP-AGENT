@@ -288,16 +288,21 @@ class TestAzureLLM:
             assert llm.endpoint == "https://env.openai.azure.com"
     
     def test_init_missing_api_key(self):
-        """Should raise error when API key is missing."""
+        """Should raise error when API key is missing.
+
+        ``clear=True`` matters: these cases assert on the *absence* of a
+        credential, so they must not inherit one from the developer's or CI
+        runner's environment.
+        """
         settings = MockSettings()
-        with patch.dict("os.environ", {"AZURE_OPENAI_ENDPOINT": "https://test.com"}):
+        with patch.dict("os.environ", {"AZURE_OPENAI_ENDPOINT": "https://test.com"}, clear=True):
             with pytest.raises(ValueError, match="API key not provided"):
                 AzureLLM(settings)
     
     def test_init_missing_endpoint(self):
         """Should raise error when endpoint is missing."""
         settings = MockSettings()
-        with patch.dict("os.environ", {"AZURE_OPENAI_API_KEY": "test-key"}):
+        with patch.dict("os.environ", {"AZURE_OPENAI_API_KEY": "test-key"}, clear=True):
             with pytest.raises(ValueError, match="endpoint not provided"):
                 AzureLLM(settings)
     
