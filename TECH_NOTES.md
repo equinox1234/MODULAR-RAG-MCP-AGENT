@@ -470,6 +470,7 @@
     2. 上界是"当前可用版本"的保守约束，后续升级需人工验证并同步 `uv.lock`。
     3. 本地 `.venv` 仍是旧环境，与新 lock 不一致；建议 `uv sync --exact` 重建（本次未动它，避免打断正在使用的环境）。
 - **CI 转绿（2026-11-08）**：`342bf60` 推送后 GitHub Actions 全绿（Install uv / Install project from lockfile / Lint / Unit tests 均 success）。至此 CI 门禁第一次真正生效。
+- **仓库发布（2026-11-08）**：仓库以 `https://github.com/equinox1234/MODULAR-RAG-MCP-AGENT` 公开；首次推送前移除了上游教程附带的 `.claude/skills`、`.github/skills`（65 个文件），并在 README 顶部说明来源。`origin/main = 5120811`，`ruff check .` 通过、`pytest` 1455 passed。本地目录名仍是 `MODULAR-RAG-MCP-SERVER-main`，不影响使用。
 
 ### T-8 trace 治理
 
