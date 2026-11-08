@@ -471,6 +471,7 @@
     3. 本地 `.venv` 仍是旧环境，与新 lock 不一致；建议 `uv sync --exact` 重建（本次未动它，避免打断正在使用的环境）。
 - **CI 转绿（2026-11-08）**：`342bf60` 推送后 GitHub Actions 全绿（Install uv / Install project from lockfile / Lint / Unit tests 均 success）。至此 CI 门禁第一次真正生效。
 - **仓库发布（2026-11-08）**：仓库以 `https://github.com/equinox1234/MODULAR-RAG-MCP-AGENT` 公开；首次推送前移除了上游教程附带的 `.claude/skills`、`.github/skills`（65 个文件），并在 README 顶部说明来源。`origin/main = 5120811`，`ruff check .` 通过、`pytest` 1455 passed。本地目录名仍是 `MODULAR-RAG-MCP-SERVER-main`，不影响使用。
+- **项目计划重构（2026-11-08，T-10）**：`MODBUS_PROJECT_PLAN.md` 从 119 行"进度流水账"重写为 148 行的对外主页。原文件的问题是**给面试官看的，却像开发日志**：20 个待办只有 5 个勾选（实际已完成大半）、进度段落倒序插在"一个月交付计划"标题下、多处表述过期（"尚未收集和验证公开资料""尚未接入 MCP"）。新结构：一页纸摘要 → Mermaid 架构图 → 30 秒复现 → 里程碑表（正序、带证据链接）→ 评测汇总 → **贡献边界**（逐文件划分本项目产出 vs 复用框架）→ 面试问答备忘 → 已知限制 → 数据合规 → 延期项。详细决策仍以本台账为准，计划只保留结论与索引。
 
 ### T-8 trace 治理
 
