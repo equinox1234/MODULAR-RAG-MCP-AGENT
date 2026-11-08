@@ -28,13 +28,27 @@ dependencies = [
     "langchain-text-splitters>=0.3.0",
     "langgraph>=1.0,<2",
     "jsonschema>=4.0",
-    "chromadb>=0.4.0",
-    "mcp>=1.0.0",
+    "chromadb>=0.4.0,<2",
+    # chromadb pulls onnxruntime; 1.23+ only publishes cp311+ wheels while the
+    # package metadata still claims Python 3.10 support, which breaks
+    # `uv sync` on 3.10 with "no wheel for the current platform".
+    "onnxruntime<1.23; python_version < '3.11'",
+    # mcp 2.x renamed the pydantic fields to snake_case (is_error,
+    # structured_content, input_schema) and dropped the decorator lookup
+    # helpers this project uses. Stay on the 1.x line until that migration.
+    "mcp>=1.0.0,<2",
     "jieba>=0.42",
     "markitdown[pdf]>=0.1.0",
     "pdfplumber>=0.11.0",
-    "streamlit>=1.30.0",
-    "ragas>=0.1.0",
+    # 1.60+ changes AppTest element retention, which the dashboard smoke test
+    # asserts on; verified working on 1.55.
+    "streamlit>=1.30.0,<1.60",
+    # 0.5.x pulls a different langchain stack and fails to import here.
+    "ragas>=0.1.0,<0.5",
+    # ragas 0.4.x imports langchain_community.chat_models.vertexai, which was
+    # removed in langchain-community 0.4.2 (upstream split into a separate
+    # package). Keep the transitive dependency below that release.
+    "langchain-community>=0.3,<0.4.2",
     "datasets>=2.0.0",
     # Imported directly by the LLM/embedding adapters for error mapping.
     "httpx>=0.24",

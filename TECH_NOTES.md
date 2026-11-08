@@ -448,6 +448,27 @@
   - **根因**：这些用例断言的是「**缺少**凭据时报错」，却依赖"运行环境本身没有 key"这个前提。`patch.dict(os.environ, {...})` 默认不清空，`monkeypatch.delenv` 只删了部分变量——环境里只要有 `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY` 就会破坏前提。
   - **修复**：`patch.dict(..., clear=True)`；对每个相关变量显式 `delenv`；fallback 用例显式清掉 settings 里的 `api_key`。
   - **教训**：这类"断言缺失状态"的测试必须自己构造空环境，不能依赖 runner 干净。以后新增同类用例一律 `clear=True`。
+- **第二次 CI 失败（2026-11-08，根因是依赖漂移）**：修完环境变量后仍红，日志显示 **47 failed**，分三组：
+  1. `'CallToolResult' object has no attribute 'isError'`、`'Tool' object has no attribute 'inputSchema'`、`'ImageContent' object has no attribute 'mimeType'`、`'Server' object has no attribute 'list_tools'`；
+  2. `The 'ragas' package is required`（ImportError）；
+  3. `test_modbus_page` 的 dataframe 断言失败。
+  - **根因**：`pyproject.toml` 里依赖只有下界（`mcp>=1.0.0`、`streamlit>=1.30.0`…），CI 每次 `pip install` 都解析**最新版**：
+    - `mcp` 装了 **2.x**，pydantic 字段从 camelCase 改成 snake_case（`is_error`/`structured_content`/`input_schema`/`mime_type`），并移除了测试依赖的装饰器查找方法；
+    - `ragas` 在新解析下拿到 `langchain-community 0.4.2`，而 `ragas 0.4.3` 仍在 import `langchain_community.chat_models.vertexai`（0.4.2 已删除该模块）；
+    - `streamlit` 升到 1.6x，`AppTest` 的元素保留行为变化，导致"切换输入后不应再有 dataframe"的断言失败；
+    - 另外 `uv.lock` 早已把 `mcp` 锁到 **2.3.0**，与本地可用的 1.26.0 不一致——**锁文件本身也坏了**，所以"用 lockfile"并不能自动解决。
+  - **修复**（两层，缺一不可）：
+    1. **给会破坏兼容的依赖加上界**：`mcp<2`、`streamlit<1.60`、`ragas<0.5`、`langchain-community<0.4.2`（ragas 的传递依赖，必须显式约束），以及 `onnxruntime<1.23; python_version < '3.11'`（chromadb 传递依赖，1.23+ 只发 cp311+ wheel，但元数据仍声称支持 3.10，导致 `uv sync` 在 3.10 上报 "no wheel for the current platform"）。
+    2. **重新生成 `uv.lock` 并让 CI 按锁安装**：workflow 改用 `astral-sh/setup-uv`（固定 0.12.13 + Python 3.10）+ `uv sync --frozen --extra dev`，lint 与测试走 `uv run --frozen`。这样上游再发大版本也不会悄悄改变 CI 行为。
+  - **验证**（用 `UV_PROJECT_ENVIRONMENT` 建隔离环境，不碰仓库 `.venv`）：
+    - `uv sync --frozen --extra dev --python 3.10` → 成功（`onnxruntime 1.22.1`、`ragas 0.4.3`、`mcp 1.30.0`）；
+    - 该环境下 `uv run --frozen pytest -q` → **1455 passed / 2 skipped / 170 deselected**；
+    - `uv run --frozen ruff check .` → 通过；
+    - 另在 Python 3.12 环境下同样 1455 passed（说明不是 3.10 特有）。
+  - **遗留**：
+    1. **未迁移 mcp 2.x**：代码与测试仍用 camelCase 字段，等 mcp 2 生态稳定后再做一次适配（届时需改 `protocol_handler`、7 个工具和对应测试）。
+    2. 上界是"当前可用版本"的保守约束，后续升级需人工验证并同步 `uv.lock`。
+    3. 本地 `.venv` 仍是旧环境，与新 lock 不一致；建议 `uv sync --exact` 重建（本次未动它，避免打断正在使用的环境）。
 
 ### T-8 trace 治理
 

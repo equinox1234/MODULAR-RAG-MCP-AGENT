@@ -20,25 +20,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      # Install from uv.lock instead of resolving "latest" on every run.
+      # Without this, an upstream major release (e.g. mcp 2.x renaming
+      # isError -> is_error) turns the build red with no code change here.
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
+          version: "0.12.13"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
           python-version: "3.10"
-          cache: pip
 
-      - name: Install project
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+      - name: Install project from lockfile
+        run: uv sync --frozen --extra dev
 
       - name: Lint (correctness gate)
         # pyproject selects E9/F63/F7/F82; the wider style backlog is tracked
         # in TECH_NOTES.md instead of blocking every change.
-        run: ruff check .
+        run: uv run --frozen ruff check .
 
       - name: Unit tests
-        # Default addopts already exclude e2e/llm. data/ is gitignored, so
-        # corpus-dependent tests skip automatically.
-        run: pytest -q
+        # Default addopts already exclude integration/e2e/llm. data/ is
+        # gitignored, so corpus-dependent tests skip automatically.
+        run: uv run --frozen pytest -q
 
       - name: Upload test artifacts
         if: failure()
