@@ -469,6 +469,7 @@
     1. **未迁移 mcp 2.x**：代码与测试仍用 camelCase 字段，等 mcp 2 生态稳定后再做一次适配（届时需改 `protocol_handler`、7 个工具和对应测试）。
     2. 上界是"当前可用版本"的保守约束，后续升级需人工验证并同步 `uv.lock`。
     3. 本地 `.venv` 仍是旧环境，与新 lock 不一致；建议 `uv sync --exact` 重建（本次未动它，避免打断正在使用的环境）。
+- **CI 转绿（2026-11-08）**：`342bf60` 推送后 GitHub Actions 全绿（Install uv / Install project from lockfile / Lint / Unit tests 均 success）。至此 CI 门禁第一次真正生效。
 
 ### T-8 trace 治理
 
