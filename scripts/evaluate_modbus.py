@@ -98,6 +98,9 @@ def main():
             report["summary"] = {"executed": len(rows), "selected": len(cases), "evidence_cases": len(evidence_rows),
                 "evidence_hit_at_3": sum(r.get("metrics", {}).get("evidence_hit_at_k", False) for r in evidence_rows) / len(evidence_rows) if evidence_rows else None,
                 "mrr_at_3": sum(r.get("metrics", {}).get("reciprocal_rank", 0) for r in evidence_rows) / len(evidence_rows) if evidence_rows else None,
+                "recall_at_1": sum(r.get("metrics", {}).get("recall_at_1", 0) for r in evidence_rows) / len(evidence_rows) if evidence_rows else None,
+                "recall_at_3": sum(r.get("metrics", {}).get("recall_at_3", 0) for r in evidence_rows) / len(evidence_rows) if evidence_rows else None,
+                "recall_at_5": sum(r.get("metrics", {}).get("recall_at_5", 0) for r in evidence_rows) / len(evidence_rows) if evidence_rows else None,
                 "scope_checks_passed": sum(r.get("metrics", {}).get("scope_ok", False) for r in rows)}
         else:
             report["summary"] = {"executed": len(rows), "selected": len(cases),

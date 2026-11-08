@@ -442,6 +442,7 @@
   - `mypy` 没有进门禁（仍有较多存量错误）。
   - 跑 CI 需要能装 `chromadb`/`ragas`/`streamlit` 等重依赖，冷启动约 5–10 分钟。
   - `data/` 被 gitignore，语料相关测试靠 skip；CI 覆盖不到 PDF 摄取全链路。
+  - 评测指标只有 Hit@3 / MRR@3，**Recall@K 已加入但尚未在计划表中体现**（T-11）。
 - **首次真实 CI 运行失败（2026-11-08）**：推送后 `Unit tests` 步骤红，`Install project` 与 `Lint` 绿。
   - **复现方式**：本地克隆一份干净仓库（`data/`、`.env` 都不存在）再跑，得到与 CI 等价的 1427 passed / 30 skipped —— 说明本地没有问题。加上环境变量（占位或真实 key）后立刻出现 **4 个失败**：
     `AzureLLM.test_init_missing_api_key`、`AzureLLM.test_init_missing_endpoint`、`AzureEmbedding.test_initialization_missing_endpoint`、`AzureEmbedding.test_initialization_fallback_to_openai_env_var`。
@@ -514,6 +515,7 @@
 - **处理**：用 DSH 自带的 `diagnose-windows-sandbox-acl.ps1` 诊断+修复，脚本先备份 DACL 再补权限。报告：`D:\1AI_study\AI_program\dsh-acl-recovery\acl-report-*.jsonl`；回滚脚本：同目录 `acl-backup-14d4ca56….json.ps1`。
 - **验证**：修复后普通沙箱模式可正常执行命令。
 - **代价 / 遗留**：修复脚本在**工作区之外**建了备份目录，如果不打算回滚可以删除。
+- **评测指标扩展（2026-11-08，T-11）**：在 `scripts/evaluate_modbus.py` 中加 Recall@1/3/5，`src/observability/evaluation/modbus_eval.py::score_retrieval` 输出 `recall_at_k`。当前 v3 题库 98/100 题是单 anchor，所以 Recall@K 与 Hit@K 数值相同；保留三个 K 值是为了未来多 anchor 题目能展开区分度。已在 [MODBUS_PROJECT_PLAN.md](MODBUS_PROJECT_PLAN.md) 评测表中补列 Recall@3。
 
 ### I-2 测试解释器与依赖
 

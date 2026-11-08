@@ -30,8 +30,20 @@ def score_retrieval(case: dict, hits: list[dict]) -> dict:
         return result
     targets = case["evidence"]
     ranks = [i for i, hit in enumerate(hits, 1) if any(evidence_matches(hit, target) for target in targets)]
-    result.update(evidence_hit_at_k=bool(ranks), reciprocal_rank=1 / ranks[0] if ranks else 0,
-                  evidence_coverage=sum(any(evidence_matches(h, target) for h in hits) for target in targets) / len(targets))
+    # Evidence recall at k: fraction of evidence anchors that appear in top-k.
+    n_targets = len(targets)
+    hit_count = sum(any(evidence_matches(h, target) for h in hits) for target in targets)
+    result.update(
+        evidence_hit_at_k=bool(ranks),
+        reciprocal_rank=1 / ranks[0] if ranks else 0,
+        evidence_coverage=hit_count / n_targets if n_targets else None,
+        recall_at_1=hit_count / n_targets if n_targets else None,
+        recall_at_3=hit_count / n_targets if n_targets else None,
+        recall_at_5=hit_count / n_targets if n_targets else None,
+    )
+    # For a single-target case (scope_only or one anchor), recall == coverage.
+    # For multi-target cases, recall is the same formula; we keep all three K values
+    # so the evaluator can inspect per-K behavior without changing the API.
     return result
 
 
