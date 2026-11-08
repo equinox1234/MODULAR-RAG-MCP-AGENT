@@ -1,0 +1,10 @@
+[
+  {"question": "异常码02是什么意思", "expected": "app-exception"},
+  {"question": "03读取保持寄存器的数量", "expected": "app-read"},
+  {"question": "CRC低字节先发送吗", "expected": "serial-crc"},
+  {"question": "广播地址0需要响应吗", "expected": "serial-master"},
+  {"question": "PDU寄存器地址从0开始吗", "expected": "app-address"},
+  {"question": "响应超时timeout", "expected": "serial-timeout"},
+  {"question": "VT-100温度倍率", "device": "VT-100", "expected": "vt-registers"},
+  {"question": "VT-100串口波特率", "device": "VT-100", "expected": "vt-config"}
+]

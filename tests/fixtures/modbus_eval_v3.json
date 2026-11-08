@@ -1,0 +1,2008 @@
+{
+  "version": "3.0.0",
+  "created": "2026-11-08",
+  "purpose": "Expanded retrieval suite (100 cases). v2's 60 cases are carried over unchanged; 40 new cases cover the remaining function codes, ASCII/LRC details, physical layer and the CRC appendix. Evidence anchors are mechanically validated against the corpus by scripts/validate_modbus_eval_suite.py. Labels are authored by the project's development assistant; independent human review is pending, so this is not a training-independent benchmark.",
+  "split_policy": {
+    "tuning": "May be inspected while tuning retrieval/ranking. Includes all v1 cases, which were already used for T-1/T-2.",
+    "test": "Do not inspect individual results while tuning. Report aggregate only; used once per frozen change."
+  },
+  "retrieval_cases": [
+    {
+      "id": "R01",
+      "split": "tuning",
+      "question": "功能04获取的是input registers还是holding registers？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 16,
+          "anchor": "Read Input Registers"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R02",
+      "split": "tuning",
+      "question": "06 Write Single Register正常回复包含什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 19,
+          "anchor": "Write Single Register"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R03",
+      "split": "tuning",
+      "question": "0x10 Write Multiple registers一次最多写多少？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 30,
+          "anchor": "Write Multiple registers"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R04",
+      "split": "tuning",
+      "question": "异常码01 Illegal function表示什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL FUNCTION"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R05",
+      "split": "tuning",
+      "question": "03 ILLEGAL DATA VALUE是不是指应用程序认为数值超范围？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL DATA VALUE"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R06",
+      "split": "tuning",
+      "question": "RTU两帧之间silent interval至少几个字符时间？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "3.5 character times"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R07",
+      "split": "tuning",
+      "question": "收到字符间隔超过1.5 character times的RTU帧应如何处理？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "declared incomplete"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "anchor 过短且泛化，改为完整从句"
+      }
+    },
+    {
+      "id": "R08",
+      "split": "tuning",
+      "question": "为什么地址0的broadcast写操作没有reply？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 7,
+          "anchor": "No response is returned"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R09",
+      "split": "tuning",
+      "question": "Response time-out设置应如何考虑从站处理时间？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 10,
+          "anchor": "process the request"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R10",
+      "split": "tuning",
+      "question": "CRC的low-order byte和high-order byte哪个先附加？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 15,
+          "anchor": "low-order byte"
+        },
+        {
+          "source": "serial",
+          "page": 39,
+          "anchor": "low-order byte will be transmitted first"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "p15 表述不完整；补 p39 的等价证据（v1.1 复核已记录）"
+      }
+    },
+    {
+      "id": "R11",
+      "split": "tuning",
+      "question": "VT-100原始温度250应该如何换算？",
+      "device": "VT-100",
+      "evidence": [
+        {
+          "source": "virtual",
+          "chunk_id": "vt-registers",
+          "anchor": "25.0"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "R12",
+      "split": "tuning",
+      "question": "未知型号设备的温度倍率是否一定和VT-100相同？",
+      "forbid_kinds": [
+        "synthetic"
+      ],
+      "scope_only": true,
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D01",
+      "split": "tuning",
+      "question": "Modbus 串行链路的 ADU 最大长度是多少字节？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 5,
+          "anchor": "RS485 ADU = 256 bytes"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D02",
+      "split": "tuning",
+      "question": "Modbus PDU 在串行链路上最大是多少字节？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 5,
+          "anchor": "PDU for serial line communication"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "anchor 过短且有 3 处匹配"
+      }
+    },
+    {
+      "id": "D03",
+      "split": "tuning",
+      "question": "异常响应的功能码是怎么从请求功能码得到的？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 9,
+          "anchor": "the request function code + 0x80"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D04",
+      "split": "tuning",
+      "question": "功能码01的作用是什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 11,
+          "anchor": "01 (0x01) Read Coils"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D05",
+      "split": "tuning",
+      "question": "功能码04一次最多能读多少个寄存器？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 16,
+          "anchor": "1 to 125 contiguous input registers"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D06",
+      "split": "tuning",
+      "question": "功能码03一次最多能读多少个保持寄存器？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 15,
+          "anchor": "1 to 125 (0x7D)"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D07",
+      "split": "tuning",
+      "question": "功能码05是做什么的？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 17,
+          "anchor": "05 (0x05) Write Single Coil"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D08",
+      "split": "tuning",
+      "question": "功能码06请求和正常响应有什么区别？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 19,
+          "anchor": "06 (0x06) Write Single Register"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D09",
+      "split": "tuning",
+      "question": "线圈编号1对应的PDU地址是多少？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 29,
+          "anchor": "coil numbered 1 is addressed as 0"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D10",
+      "split": "tuning",
+      "question": "写多个线圈时字节数N怎么计算？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 30,
+          "anchor": "Quantity of Outputs / 8"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D11",
+      "split": "tuning",
+      "question": "异常码02代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "The data address received in the query is not"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D12",
+      "split": "tuning",
+      "question": "异常码04代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "An unrecoverable error occurred while the server"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D13",
+      "split": "tuning",
+      "question": "异常码06代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "SERVER DEVICE BUSY"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D14",
+      "split": "tuning",
+      "question": "异常码08代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "MEMORY PARITY ERROR"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D15",
+      "split": "tuning",
+      "question": "异常码0A代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 49,
+          "anchor": "GATEWAY PATH UNAVAILABLE"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D16",
+      "split": "tuning",
+      "question": "异常码0B代表什么含义？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 49,
+          "anchor": "GATEWAY TARGET DEVICE"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D17",
+      "split": "tuning",
+      "question": "串行总线上最多可以挂多少个从站？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 7,
+          "anchor": "247 maximum number"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D18",
+      "split": "tuning",
+      "question": "Modbus 串行地址空间共有多少个地址？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 8,
+          "anchor": "256 different addresses"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D19",
+      "split": "tuning",
+      "question": "地址248到255是什么用途？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 8,
+          "anchor": "From 248 to 255"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D20",
+      "split": "tuning",
+      "question": "广播请求发出后从站会回复吗？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 10,
+          "anchor": "no response is returned from the slaves"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D21",
+      "split": "tuning",
+      "question": "RTU 和 ASCII 两种传输模式分别叫什么？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 12,
+          "anchor": "The RTU mode and the ASCII mode"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D22",
+      "split": "tuning",
+      "question": "RTU 帧之间至少需要多长的静默间隔？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "at least 3.5 character times"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D23",
+      "split": "tuning",
+      "question": "两个字符之间间隔超过多少会被判为帧不完整？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "more than 1.5 character times"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D24",
+      "split": "tuning",
+      "question": "RTU 数据字段最多可以有多少字节？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "0 up to 252 byte(s)"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D25",
+      "split": "tuning",
+      "question": "RTU 帧里 CRC 的两个字节谁先发送？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "CRC Low CRC Hi"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D26",
+      "split": "tuning",
+      "question": "ASCII 模式每个字节用几个字符表示？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 16,
+          "anchor": "two ASCII characters"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D27",
+      "split": "tuning",
+      "question": "偶校验是对每个字符做的吗？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 19,
+          "anchor": "should be applied to each character"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D28",
+      "split": "tuning",
+      "question": "不带中继器时 RS485 总线上最多多少个设备？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 27,
+          "anchor": "32 devices is always authorized"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D29",
+      "split": "test",
+      "question": "终端电阻的典型阻值是多少？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 28,
+          "anchor": "150 ohms"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D30",
+      "split": "test",
+      "question": "CRC 字段的长度和类型是什么？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 39,
+          "anchor": "field is two bytes, containing a 16"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D31",
+      "split": "test",
+      "question": "串行链路上可选的波特率有哪些？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 20,
+          "anchor": "1200, 2400, 4800"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D32",
+      "split": "test",
+      "question": "线路终端应该接在哪些导线之间？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 28,
+          "anchor": "between the two conductors"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D33",
+      "split": "test",
+      "question": "功能码02一次最多读多少个离散输入？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 13,
+          "anchor": "1 to 2000 (0x7D0)"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D34",
+      "split": "test",
+      "question": "功能码0x0C 正常响应里事件数据最多多少字节？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 27,
+          "anchor": "0-64 bytes of events"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D35",
+      "split": "test",
+      "question": "功能码0x08 的子功能0x0F 返回什么计数？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 24,
+          "anchor": "Server No Response Count"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "原问题写成子功能00，但 Server No Response Count 属于子功能0x0F"
+      }
+    },
+    {
+      "id": "D36",
+      "split": "test",
+      "question": "从站处于 Listen Only 模式时对应哪个事件字节描述？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 28,
+          "anchor": "Currently in Listen Only Mode"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D37",
+      "split": "test",
+      "question": "异常响应发生时客户端可能遇到哪四种事件？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 47,
+          "anchor": "four possible events"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D38",
+      "split": "test",
+      "question": "规范里被保留的功能码子码示例有哪些？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 50,
+          "anchor": "8/19; 8/21"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D39",
+      "split": "test",
+      "question": "功能码0x2B/0x0D 响应里 Object0.Length 表示什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 45,
+          "anchor": "Object0.Length"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D40",
+      "split": "test",
+      "question": "功能码01的请求里功能码字段是什么值？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 11,
+          "anchor": "6.1 01 (0x01) Read Coils"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "anchor 0x01 在页内出现 3 次，改为唯一的功能码标题"
+      }
+    },
+    {
+      "id": "D41",
+      "split": "test",
+      "question": "VT-100 的温度寄存器单位是什么？",
+      "device": "VT-100",
+      "evidence": [
+        {
+          "source": "virtual",
+          "chunk_id": "vt-registers",
+          "anchor": "单位 0.1 摄氏度"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D42",
+      "split": "test",
+      "question": "VT-100 的串口参数是什么？",
+      "device": "VT-100",
+      "evidence": [
+        {
+          "source": "virtual",
+          "chunk_id": "vt-config",
+          "anchor": "8 数据位、偶校验、1 停止位"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D43",
+      "split": "test",
+      "question": "VT-100 读超出范围的寄存器地址会返回什么？",
+      "device": "VT-100",
+      "evidence": [
+        {
+          "source": "virtual",
+          "chunk_id": "vt-registers",
+          "anchor": "异常码 02"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D44",
+      "split": "test",
+      "question": "日志里的 CRC mismatch 能证明电磁干扰吗？",
+      "evidence": [
+        {
+          "source": "guide",
+          "chunk_id": "guide-evidence",
+          "anchor": "仅证明校验不匹配"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D45",
+      "split": "test",
+      "question": "RTU 帧的地址字段和功能码字段各占几个字节？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 13,
+          "anchor": "1 byte 1 byte"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D46",
+      "split": "test",
+      "question": "MODBUS 串行链路协议对应 OSI 模型的第几层？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 5,
+          "anchor": "level 2 of the OSI model"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D47",
+      "split": "test",
+      "question": "ASCII 模式的 LRC 放在帧的什么位置？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 18,
+          "anchor": "placed at the end of the ASCII mode frame"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D48",
+      "split": "test",
+      "question": "串行链路一致性里 MUST 要求和 SHOULD 建议有什么区别？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 6,
+          "anchor": "MUST requirements"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D49",
+      "split": "tuning",
+      "question": "功能码08的子功能03修改的是什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 23,
+          "anchor": "end of message delimiter"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D50",
+      "split": "tuning",
+      "question": "功能码08的子功能04有什么作用？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 23,
+          "anchor": "Force Listen Only Mode"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D51",
+      "split": "tuning",
+      "question": "功能码0x08 的子功能0x10（十进制16）返回什么计数？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 24,
+          "anchor": "Return Server NAK Count"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "明确进制，避免 16 与 0x16 混淆"
+      }
+    },
+    {
+      "id": "D52",
+      "split": "tuning",
+      "question": "功能码0x08 的子功能0x0F 统计的是哪一类消息数量？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 24,
+          "anchor": "neither a normal response nor an exception response"
+        }
+      ],
+      "review": {
+        "status": "fixed",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": "明确是 0x0F 子功能"
+      }
+    },
+    {
+      "id": "D53",
+      "split": "tuning",
+      "question": "获取通信事件日志用的是哪个功能码？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 27,
+          "anchor": "Function code 1 Byte 0x0C"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D54",
+      "split": "tuning",
+      "question": "事件日志里哪类事件表示设备处理完了一个请求？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 28,
+          "anchor": "Remote device MODBUS Send Event"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D55",
+      "split": "tuning",
+      "question": "功能码0x0F是做什么的？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 29,
+          "anchor": "force each coil in a sequence of coils"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D56",
+      "split": "tuning",
+      "question": "0x10 写多个寄存器的响应示例里数量高字节是什么值？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 31,
+          "anchor": "Quantity of Registers Hi 00"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D57",
+      "split": "tuning",
+      "question": "功能码0x14是做什么的？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 32,
+          "anchor": "Read File Record"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D58",
+      "split": "tuning",
+      "question": "0x14 文件记录读请求的引用类型字段是什么值？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 33,
+          "anchor": "Reference Type 1 Byte 6"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D59",
+      "split": "tuning",
+      "question": "0x15 写文件记录响应的数据长度范围是多少？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 35,
+          "anchor": "0x09 to 0xFB"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D60",
+      "split": "tuning",
+      "question": "0x16 屏蔽写寄存器的请求里有哪两个掩码字段？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 37,
+          "anchor": "And_Mask 2 Bytes"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D61",
+      "split": "tuning",
+      "question": "0x17 读写多个寄存器时读和写的顺序是什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 38,
+          "anchor": "write operation is performed before the read"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D62",
+      "split": "tuning",
+      "question": "0x18 读 FIFO 队列最多能读多少个寄存器？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 40,
+          "anchor": "Up to 32 registers can be read"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D63",
+      "split": "tuning",
+      "question": "哪些 MEI 类型不属于保留值？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 42,
+          "anchor": "MEI Type 13"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D64",
+      "split": "tuning",
+      "question": "通过封装接口传输时 PDU 的长度限制是多少？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 43,
+          "anchor": "253 Byte limitation"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D65",
+      "split": "tuning",
+      "question": "读设备标识请求里 Read Device ID code 01 表示什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 44,
+          "anchor": "basic device identification"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D66",
+      "split": "tuning",
+      "question": "串行线的诊断计数器通过什么访问？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 35,
+          "anchor": "diagnostic counters"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D67",
+      "split": "tuning",
+      "question": "LRC 字段占几个字节？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 38,
+          "anchor": "LRC) field is one byte"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D68",
+      "split": "tuning",
+      "question": "CRC 计算开始时 16 位寄存器被预置成什么？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 39,
+          "anchor": "preloading a 16"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D69",
+      "split": "tuning",
+      "question": "文档里的 CRC 计算示例用的是哪一帧？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 41,
+          "anchor": "Example of CRC calculation"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D70",
+      "split": "tuning",
+      "question": "C 语言 CRC 实现里哪个数组是高字节表？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 43,
+          "anchor": "auchCRCHi"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D71",
+      "split": "tuning",
+      "question": "串行线规范引用的 RS485 标准是哪一个？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 44,
+          "anchor": "EIA-485-A-1998"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D72",
+      "split": "tuning",
+      "question": "Modbus 串行线定义了哪两种传输模式？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 12,
+          "anchor": "Two different serial transmission modes"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D73",
+      "split": "tuning",
+      "question": "ASCII 模式收到冒号字符意味着什么？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 18,
+          "anchor": "beginning of a new message"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D74",
+      "split": "test",
+      "question": "帧校验应作用于消息的哪个范围？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 19,
+          "anchor": "applied to the entire message"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D75",
+      "split": "test",
+      "question": "对已实现波特率的传输精度要求是多少？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 20,
+          "anchor": "better than 1%"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D76",
+      "split": "test",
+      "question": "线路终端电阻装在哪里？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 21,
+          "anchor": "Line terminations are necessary"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D77",
+      "split": "test",
+      "question": "四线制兼容两线制时需要重新安排哪些电阻？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 24,
+          "anchor": "Pull-up, Pull-down"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D78",
+      "split": "test",
+      "question": "RS232 模式的要求写在哪一节？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 26,
+          "anchor": "RS232-MODBUS requirements"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D79",
+      "split": "test",
+      "question": "无中继器时一条 RS485-MODBUS 总线上的最大设备数是多少？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 27,
+          "anchor": "Maximum number of devices without repeater"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D80",
+      "split": "test",
+      "question": "线路极化（Line Polarization）在哪一节说明？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 28,
+          "anchor": "3.4.6 Line Polarization"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D81",
+      "split": "test",
+      "question": "可选四线制 MODBUS 的连接器引脚定义在哪一节？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 30,
+          "anchor": "Connectors pin-out for optional 4W-MODBUS"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D82",
+      "split": "test",
+      "question": "视觉诊断用的 LED 表里包含哪一列建议信息？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 32,
+          "anchor": "Recommended colour"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D83",
+      "split": "test",
+      "question": "实现类里从站地址范围是多少？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 34,
+          "anchor": "1 to 247"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D84",
+      "split": "test",
+      "question": "诊断计数器的递增时机由哪一节描述？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 36,
+          "anchor": "Counters Management Diagram"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D85",
+      "split": "test",
+      "question": "ASCII 模式的消息帧是如何定界的？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 17,
+          "anchor": "A MODBUS message is placed by the transmitting device into a frame"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D86",
+      "split": "test",
+      "question": "两线制总线里二进制 1 对应哪条线的电平更高？",
+      "evidence": [
+        {
+          "source": "serial",
+          "page": 22,
+          "anchor": "binary 1 [OFF] state"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D87",
+      "split": "test",
+      "question": "0x16 屏蔽写寄存器请求里参考地址字段的范围是多少？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 37,
+          "anchor": "Reference Address 2 Bytes"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    },
+    {
+      "id": "D88",
+      "split": "test",
+      "question": "读 FIFO 队列会把队列清空吗？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 40,
+          "anchor": "does not clear them"
+        }
+      ],
+      "review": {
+        "status": "approved",
+        "by": "assistant-self-review",
+        "date": "2026-11-08",
+        "note": ""
+      }
+    }
+  ],
+  "agent_cases": [
+    {
+      "id": "A01",
+      "category": "missing_information",
+      "question": "我现场的RTU通信一直超时。没有日志，也不清楚从站参数，请现在确定唯一故障原因。",
+      "expected_status": [
+        "needs_input"
+      ],
+      "required_tools": [],
+      "forbidden_tools": [
+        "analyze_log"
+      ],
+      "review_focus": [
+        "应追问日志及双方配置",
+        "不应确定唯一根因",
+        "不应捏造设备参数"
+      ]
+    },
+    {
+      "id": "A02",
+      "category": "capture_boundary",
+      "question": "这份记录只有一条请求就结束了。请分析它现在能否判定超时，并给出下一步验证。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "pending"
+      ],
+      "require_log_citation": true,
+      "review_focus": [
+        "末尾pending不能直接说超时",
+        "建议延长观察窗口",
+        "不能把缺少响应证据表述为线路故障"
+      ]
+    },
+    {
+      "id": "A03",
+      "category": "exception_response",
+      "question": "请解析请求和异常回复，查标准解释异常码，告诉我还需要核对哪些信息。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        },
+        {
+          "timestamp_ms": 20,
+          "direction": "RX",
+          "hex_frame": "01 83 02 C0 F1"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "exception_response"
+      ],
+      "require_log_citation": true,
+      "expected_evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL DATA ADDRESS"
+        }
+      ],
+      "review_focus": [
+        "02表示非法数据地址",
+        "核对起始地址与数量组合及设备映射",
+        "不能仅凭异常码断言具体哪个寄存器不存在"
+      ]
+    },
+    {
+      "id": "A04",
+      "category": "crc_and_timeout",
+      "question": "日志中的接收帧校验失败，能否证明是电磁干扰？请先分析日志再查资料，区分已确认与待验证。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        },
+        {
+          "timestamp_ms": 25,
+          "direction": "RX",
+          "hex_frame": "01 03 04 00 64 00 C8 00 00"
+        },
+        {
+          "timestamp_ms": 1200,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "timeout",
+        "pending"
+      ],
+      "issue_kinds": [
+        "invalid_frame"
+      ],
+      "require_log_citation": true,
+      "review_focus": [
+        "CRC不匹配不是电磁干扰的充分证据",
+        "超时是没有匹配有效响应，不等于没有收到字节",
+        "不能证明帧字段结构一定错误"
+      ]
+    },
+    {
+      "id": "A05",
+      "category": "broadcast",
+      "question": "主站向地址0发送写请求后一直没收到回复，这是超时故障吗？请检查日志并查协议。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "00 06 00 01 00 05 19 D8"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "broadcast"
+      ],
+      "require_log_citation": true,
+      "expected_evidence": [
+        {
+          "source": "serial",
+          "page": 7,
+          "anchor": "No response is returned"
+        }
+      ],
+      "review_focus": [
+        "广播写请求不期待响应",
+        "不能当作普通单播超时",
+        "不建议根据该记录更改接线"
+      ]
+    },
+    {
+      "id": "A06",
+      "category": "document_only",
+      "question": "请查官方文档，比较03与04读取的寄存器类型，只需要解释区别，不是在问某台设备故障。",
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "search_docs"
+      ],
+      "forbidden_tools": [
+        "analyze_log"
+      ],
+      "review_focus": [
+        "03保持寄存器，04输入寄存器",
+        "不应要求日志才能解释概念",
+        "引用应支持两种功能码的定义"
+      ]
+    }
+  ],
+  "review": {
+    "status": "completed",
+    "by": "assistant-self-review",
+    "date": "2026-11-08",
+    "reviewed": 100,
+    "fixed": 7,
+    "caveat": "Same author as the questions and labels; this is a self-review, not an independent blind review. Mechanical anchor validation plus a question/evidence/answerability pass were done. Treat external accuracy claims as blocked until a second person reviews the test split."
+  }
+}

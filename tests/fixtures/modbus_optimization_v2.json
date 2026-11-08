@@ -1,0 +1,205 @@
+{
+  "version": "2.0.0",
+  "created": "2026-11-05",
+  "purpose": "Targeted development validation for query normalization and broadcast uncertainty; authored alongside the fix, not an independent unseen benchmark.",
+  "retrieval_cases": [
+    {
+      "id": "R13",
+      "question": "Modbus function code 3 exception code 2",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL DATA ADDRESS"
+        }
+      ]
+    },
+    {
+      "id": "R14",
+      "question": "异常代码：0x02说明什么？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL DATA ADDRESS"
+        }
+      ]
+    },
+    {
+      "id": "R15",
+      "question": "exception code 10 means what?",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 49,
+          "anchor": "GATEWAY PATH UNAVAILABLE"
+        }
+      ]
+    },
+    {
+      "id": "R16",
+      "question": "对exception code 11应该如何理解？",
+      "evidence": [
+        {
+          "source": "application",
+          "page": 49,
+          "anchor": "FAILED TO RESPOND"
+        }
+      ]
+    }
+  ],
+  "agent_cases": [
+    {
+      "id": "A03",
+      "category": "exception_response",
+      "question": "请解析请求和异常回复，查标准解释异常码，告诉我还需要核对哪些信息。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        },
+        {
+          "timestamp_ms": 20,
+          "direction": "RX",
+          "hex_frame": "01 83 02 C0 F1"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "exception_response"
+      ],
+      "require_log_citation": true,
+      "expected_evidence": [
+        {
+          "source": "application",
+          "page": 48,
+          "anchor": "ILLEGAL DATA ADDRESS"
+        }
+      ],
+      "review_focus": [
+        "02表示非法数据地址",
+        "核对起始地址与数量组合及设备映射",
+        "不能仅凭异常码断言具体哪个寄存器不存在"
+      ]
+    },
+    {
+      "id": "A04",
+      "category": "crc_and_timeout",
+      "question": "日志中的接收帧校验失败，能否证明是电磁干扰？请先分析日志再查资料，区分已确认与待验证。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        },
+        {
+          "timestamp_ms": 25,
+          "direction": "RX",
+          "hex_frame": "01 03 04 00 64 00 C8 00 00"
+        },
+        {
+          "timestamp_ms": 1200,
+          "direction": "TX",
+          "hex_frame": "01 03 00 00 00 02 C4 0B"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "timeout",
+        "pending"
+      ],
+      "issue_kinds": [
+        "invalid_frame"
+      ],
+      "require_log_citation": true,
+      "review_focus": [
+        "CRC不匹配不是电磁干扰的充分证据",
+        "超时是没有匹配有效响应，不等于没有收到字节",
+        "不能证明帧字段结构一定错误"
+      ]
+    },
+    {
+      "id": "A05",
+      "category": "broadcast",
+      "question": "主站向地址0发送写请求后一直没收到回复，这是超时故障吗？请检查日志并查协议。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "00 06 00 01 00 05 19 D8"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "broadcast"
+      ],
+      "require_log_citation": true,
+      "expected_evidence": [
+        {
+          "source": "serial",
+          "page": 7,
+          "anchor": "No response is returned"
+        }
+      ],
+      "review_focus": [
+        "广播写请求不期待响应",
+        "不能当作普通单播超时",
+        "不建议根据该记录更改接线"
+      ]
+    },
+    {
+      "id": "A07",
+      "category": "broadcast_confirmation",
+      "question": "这份日志只记录广播下发。能确认设备已经执行写入吗？请先分析日志并查协议，再说明还不能确认什么。",
+      "events": [
+        {
+          "timestamp_ms": 0,
+          "direction": "TX",
+          "hex_frame": "00 06 00 20 00 09 49 d7"
+        }
+      ],
+      "expected_status": [
+        "completed"
+      ],
+      "required_tools": [
+        "analyze_log",
+        "search_docs"
+      ],
+      "transaction_statuses": [
+        "broadcast"
+      ],
+      "require_log_citation": true,
+      "expected_evidence": [
+        {
+          "source": "serial",
+          "page": 7,
+          "anchor": "No response is returned"
+        }
+      ],
+      "review_focus": [
+        "不能确认设备已执行写入",
+        "不把广播不响应泛化成系统无故障",
+        "建议核对目标设备后使用单播或状态读取确认"
+      ]
+    }
+  ]
+}

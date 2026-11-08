@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "created": "2026-11-05",
+  "purpose": "Initial frozen baseline, authored in this project after implementation; not externally validated or a training-independent benchmark. Do not tune against this version and continue calling it held-out.",
+  "retrieval_cases": [
+    {"id": "R01", "question": "功能04获取的是input registers还是holding registers？", "evidence": [{"source": "application", "page": 16, "anchor": "Read Input Registers"}]},
+    {"id": "R02", "question": "06 Write Single Register正常回复包含什么？", "evidence": [{"source": "application", "page": 19, "anchor": "Write Single Register"}]},
+    {"id": "R03", "question": "0x10 Write Multiple registers一次最多写多少？", "evidence": [{"source": "application", "page": 30, "anchor": "Write Multiple registers"}]},
+    {"id": "R04", "question": "异常码01 Illegal function表示什么？", "evidence": [{"source": "application", "page": 48, "anchor": "ILLEGAL FUNCTION"}]},
+    {"id": "R05", "question": "03 ILLEGAL DATA VALUE是不是指应用程序认为数值超范围？", "evidence": [{"source": "application", "page": 48, "anchor": "ILLEGAL DATA VALUE"}]},
+    {"id": "R06", "question": "RTU两帧之间silent interval至少几个字符时间？", "evidence": [{"source": "serial", "page": 13, "anchor": "3.5 character times"}]},
+    {"id": "R07", "question": "收到字符间隔超过1.5 character times的RTU帧应如何处理？", "evidence": [{"source": "serial", "page": 13, "anchor": "incomplete"}]},
+    {"id": "R08", "question": "为什么地址0的broadcast写操作没有reply？", "evidence": [{"source": "serial", "page": 7, "anchor": "No response is returned"}]},
+    {"id": "R09", "question": "Response time-out设置应如何考虑从站处理时间？", "evidence": [{"source": "serial", "page": 10, "anchor": "process the request"}]},
+    {"id": "R10", "question": "CRC的low-order byte和high-order byte哪个先附加？", "evidence": [{"source": "serial", "page": 15, "anchor": "low-order byte"}]},
+    {"id": "R11", "question": "VT-100原始温度250应该如何换算？", "device": "VT-100", "evidence": [{"source": "virtual", "chunk_id": "vt-registers", "anchor": "25.0"}]},
+    {"id": "R12", "question": "未知型号设备的温度倍率是否一定和VT-100相同？", "forbid_kinds": ["synthetic"], "scope_only": true}
+  ],
+  "agent_cases": [
+    {"id": "A01", "category": "missing_information", "question": "我现场的RTU通信一直超时。没有日志，也不清楚从站参数，请现在确定唯一故障原因。", "expected_status": ["needs_input"], "required_tools": [], "forbidden_tools": ["analyze_log"], "review_focus": ["应追问日志及双方配置", "不应确定唯一根因", "不应捏造设备参数"]},
+    {"id": "A02", "category": "capture_boundary", "question": "这份记录只有一条请求就结束了。请分析它现在能否判定超时，并给出下一步验证。", "events": [{"timestamp_ms": 0, "direction": "TX", "hex_frame": "01 03 00 00 00 02 C4 0B"}], "expected_status": ["completed"], "required_tools": ["analyze_log", "search_docs"], "transaction_statuses": ["pending"], "require_log_citation": true, "review_focus": ["末尾pending不能直接说超时", "建议延长观察窗口", "不能把缺少响应证据表述为线路故障"]},
+    {"id": "A03", "category": "exception_response", "question": "请解析请求和异常回复，查标准解释异常码，告诉我还需要核对哪些信息。", "events": [{"timestamp_ms": 0, "direction": "TX", "hex_frame": "01 03 00 00 00 02 C4 0B"}, {"timestamp_ms": 20, "direction": "RX", "hex_frame": "01 83 02 C0 F1"}], "expected_status": ["completed"], "required_tools": ["analyze_log", "search_docs"], "transaction_statuses": ["exception_response"], "require_log_citation": true, "expected_evidence": [{"source": "application", "page": 48, "anchor": "ILLEGAL DATA ADDRESS"}], "review_focus": ["02表示非法数据地址", "核对起始地址与数量组合及设备映射", "不能仅凭异常码断言具体哪个寄存器不存在"]},
+    {"id": "A04", "category": "crc_and_timeout", "question": "日志中的接收帧校验失败，能否证明是电磁干扰？请先分析日志再查资料，区分已确认与待验证。", "events": [{"timestamp_ms": 0, "direction": "TX", "hex_frame": "01 03 00 00 00 02 C4 0B"}, {"timestamp_ms": 25, "direction": "RX", "hex_frame": "01 03 04 00 64 00 C8 00 00"}, {"timestamp_ms": 1200, "direction": "TX", "hex_frame": "01 03 00 00 00 02 C4 0B"}], "expected_status": ["completed"], "required_tools": ["analyze_log", "search_docs"], "transaction_statuses": ["timeout", "pending"], "issue_kinds": ["invalid_frame"], "require_log_citation": true, "review_focus": ["CRC不匹配不是电磁干扰的充分证据", "超时是没有匹配有效响应，不等于没有收到字节", "不能证明帧字段结构一定错误"]},
+    {"id": "A05", "category": "broadcast", "question": "主站向地址0发送写请求后一直没收到回复，这是超时故障吗？请检查日志并查协议。", "events": [{"timestamp_ms": 0, "direction": "TX", "hex_frame": "00 06 00 01 00 05 19 D8"}], "expected_status": ["completed"], "required_tools": ["analyze_log", "search_docs"], "transaction_statuses": ["broadcast"], "require_log_citation": true, "expected_evidence": [{"source": "serial", "page": 7, "anchor": "No response is returned"}], "review_focus": ["广播写请求不期待响应", "不能当作普通单播超时", "不建议根据该记录更改接线"]},
+    {"id": "A06", "category": "document_only", "question": "请查官方文档，比较03与04读取的寄存器类型，只需要解释区别，不是在问某台设备故障。", "expected_status": ["completed"], "required_tools": ["search_docs"], "forbidden_tools": ["analyze_log"], "review_focus": ["03保持寄存器，04输入寄存器", "不应要求日志才能解释概念", "引用应支持两种功能码的定义"]}
+  ]
+}

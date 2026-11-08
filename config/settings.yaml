@@ -1,0 +1,141 @@
+# Modular RAG MCP Server - Configuration
+# This is the main configuration file for the MCP Server.
+# Edit this file to configure LLM, Embedding, VectorStore, and other services.
+#
+# Secrets are never stored here.  Any value may reference an environment
+# variable as ${NAME} or ${NAME:-fallback}; a repo-root .env file is loaded
+# automatically (see .env.example and config/settings.example.yaml).
+
+# =============================================================================
+# LLM Configuration
+# =============================================================================
+llm:
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  provider: "openai"  # Options: openai, azure, ollama, deepseek
+  model: "qwen3.7-flash"
+  api_key: "${DASHSCOPE_API_KEY}"
+  temperature: 0.0
+  max_tokens: 4096
+
+# =============================================================================
+# Embedding Configuration
+# =============================================================================
+embedding:
+  provider: "openai"  # Options: openai, azure, ollama
+  model: "qwen3.7-text-embedding-flash"
+  dimensions: 1536  # 仅用于说明/校验；实际维度以服务端返回为准（DashScope 返回 1024）
+  # OpenAI-compatible endpoint. 必须用 base_url：写成 azure_endpoint 会让适配器
+  # 改走 Azure deployment 路径（/openai/deployments/...），在兼容模式下返回 404。
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  api_key: "${DASHSCOPE_API_KEY}"
+  # Azure 专属配置（仅当 provider: azure 时使用）：
+  # azure_endpoint: "https://<resource>.openai.azure.com"
+  # deployment_name: "text-embedding-3-small"
+  # api_version: "2024-02-15-preview"
+
+# =============================================================================
+# Vision LLM Configuration (for Image Captioning)
+# =============================================================================
+vision_llm:
+  enabled: true  # Set to true to enable vision capabilities
+  provider: "openai"  # Options: openai, azure, ollama
+  model: "qwen3.7-flash" # Options: gpt-4o, gpt-4-vision-preview (OpenAI), llava (Ollama)
+  # Azure-compatible settings (azure_endpoint triggers Azure compat mode):
+  azure_endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  deployment_name: "qwen3.7-flash"
+  api_version: "2024-02-15-preview"
+  api_key: "${DASHSCOPE_API_KEY}"
+  # Ollama-specific settings (if provider is ollama):
+  # base_url: "http://localhost:11434"
+  max_image_size: 2048  # Max dimension (width/height) for image compression
+
+# =============================================================================
+# Vector Store Configuration
+# =============================================================================
+vector_store:
+  provider: "chroma"  # Options: chroma, qdrant, pinecone
+  persist_directory: "./data/db/chroma"
+  collection_name: "knowledge_hub"
+
+# =============================================================================
+# Retrieval Configuration
+# =============================================================================
+retrieval:
+  dense_top_k: 20
+  sparse_top_k: 20
+  fusion_top_k: 10
+  rrf_k: 60  # RRF constant
+
+# =============================================================================
+# Rerank Configuration
+# =============================================================================
+rerank:
+  enabled: false
+  provider: "none"  # Options: none, cross_encoder, llm
+  model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  top_k: 5
+
+# =============================================================================
+# Evaluation Configuration
+# =============================================================================
+evaluation:
+  enabled: false
+  provider: "custom"  # Options: ragas, deepeval, custom
+  # Metrics must be computable by the selected provider, otherwise the
+  # evaluator cannot even be constructed (checked at config load when enabled):
+  #   custom -> hit_rate, mrr
+  #   ragas  -> faithfulness, answer_relevancy, context_precision
+  metrics:
+    - "hit_rate"
+    - "mrr"
+
+# =============================================================================
+# Observability Configuration
+# =============================================================================
+observability:
+  log_level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
+  trace_enabled: true
+  trace_file: "./logs/traces.jsonl"
+  structured_logging: true
+
+# =============================================================================
+# Ingestion Configuration
+# =============================================================================
+ingestion:
+  chunk_size: 1000
+  chunk_overlap: 200
+  splitter: "recursive"  # Options: recursive, semantic, fixed_length
+  batch_size: 100
+  
+  # Chunk Refiner Configuration (C5)
+  chunk_refiner:
+    use_llm: true  # Set to true to enable LLM-based refinement (requires LLM config)
+    # When use_llm is false or LLM call fails, falls back to rule-based refinement
+  
+  # Metadata Enricher Configuration (C6)
+  metadata_enricher:
+    use_llm: true  # Set to true to enable LLM-based enrichment (requires LLM config)
+    # When use_llm is false or LLM call fails, falls back to rule-based enrichment
+
+# =============================================================================
+# Modbus Domain Retrieval
+# =============================================================================
+# bm25   : offline keyword retrieval, no model or network calls (fallback)
+# hybrid : Dense + BM25 + RRF via the framework HybridSearch (current default).
+#          Requires the dense index
+#          (python -m scripts.build_modbus_dense_index) and one embedding API
+#          call per query.  If the index is missing/stale the retriever raises
+#          an explicit error instead of silently degrading.
+#          Set retrieval_mode to "bm25" for offline operation.
+modbus:
+  retrieval_mode: "hybrid"
+  dense_top_k: 20
+  sparse_top_k: 20
+  fusion_top_k: 20
+  # Optional second-stage rerank of the fused candidates.
+  # llm          : one model call per query (~8 candidates, truncated text)
+  # cross_encoder: needs torch + a local cross-encoder model (not installed here)
+  rerank_enabled: false
+  rerank_provider: "llm"
+  rerank_candidates: 8
+  rerank_text_chars: 500
